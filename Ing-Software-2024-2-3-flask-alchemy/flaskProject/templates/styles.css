@@ -1,0 +1,16 @@
+body {
+    background-color: #000000; /* Color de fondo oscuro */
+}
+
+.card {
+    border-color: #ff00d4; /* Cambiar color del borde a rosa */
+}
+
+.message-container {
+    background-color: #57029c; /* Color de fondo del contenedor */
+    text-align: center; /* Centrar texto */
+}
+
+.message {
+    font-size: 24px; /* Tamaño de fuente grande */
+}

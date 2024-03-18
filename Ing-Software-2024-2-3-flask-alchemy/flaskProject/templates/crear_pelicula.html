@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Creación de Película</title>
+</head>
+<body>
+    <h2>Creación de Película</h2>
+    <form method="POST">
+        <p>
+            <label for="nombre">Nombre:</label>
+            <input type="text" id="nombre" name="nombre" required>
+        </p>
+        <p>
+            <label for="genero">Género:</label>
+            <input type="text" id="genero" name="genero" required>
+        </p>
+        <p>
+            <label for="duracion">Duración (minutos):</label>
+            <input type="number" id="duracion" name="duracion">
+        </p>
+        <p>
+            <label for="inventario">Inventario:</label>
+            <input type="number" id="inventario" name="inventario" required>
+        </p>
+        <button type="submit">Guardar</button>
+    </form>
+    <a href="/"><button type="button">Regresar al inicio</button></a>
+</body>
+</html>
