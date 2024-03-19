@@ -1,90 +1,63 @@
-from flask import Blueprint, request, render_template, flash, url_for, redirect
-from model import model_peliculas as mp
+# ControllerPelicula.py
+from flask import Blueprint, request, render_template
+from model.model_peliculas import PeliculaModel as PeliculaService
 
 pelicula_blueprint = Blueprint('pelicula', __name__, url_prefix='/pelicula')
 
 @pelicula_blueprint.route('/buscarPelicula', methods=['GET', 'POST'])
-def mostrar_pelicula_por_id():
-     if request.method == "GET":
-        return render_template('leer_peliculas.html')
-     else:
-
-        id = request.form["peliculaId"]
-        pelicula = mp.leer_pelicula_por_id(id)
-        if pelicula is not None:
-           return render_template("mostrar_pelicula.html", pelicula=pelicula)
+def buscar_pelicula():
+    if request.method == 'POST':
+        pelicula_id = request.form['peliculaId']
+        pelicula = PeliculaService.obtener_por_id(pelicula_id)
+        if pelicula:
+            return render_template('mostrar_pelicula.html', pelicula=pelicula)
         else:
-            return render_template("mensaje.html", mensaje= "No existe pelicula con dicho Id")
-     
+            mensaje = 'No se encontró la película con el ID proporcionado.'
+            return render_template('mensaje.html', mensaje=mensaje)
+    return render_template('leer_peliculas.html')
+
 @pelicula_blueprint.route('/borrar', methods=['GET', 'POST'])
 def eliminar_pelicula_por_id():
-     if request.method == "GET":
+    if request.method == "GET":
         return render_template('borrar_peliculas.html')
-     else:
-
-        id = request.form["peliculaId"]
-        print(id)
-        retorno = mp.eliminar_pelicula(id)
-         
-        if retorno == -1:
-            return render_template("mensaje.html", mensaje="Ha habido un error al intentar borrar")
-        else:
-            return render_template("mensaje.html", mensaje="Película borrada con éxito")
-
+    else:  # POST
+        pelicula_id = request.form['peliculaId']
+        resultado = PeliculaService.eliminar(pelicula_id)
+        mensaje = resultado
+        return render_template("mensaje.html", mensaje=mensaje)
 
 @pelicula_blueprint.route('/registro', methods=['GET', 'POST'])
-def agregar_pelicula():
-    if request.method == "GET":
-        return render_template('crear_pelicula.html')
-    else:
+def registrar_pelicula():
+    if request.method == 'POST':
+        nombre = request.form['nombre']
+        genero = request.form['genero']
+        duracion = request.form['duracion']
+        inventario = request.form['inventario']
+        
+        resultado = PeliculaService.crear(nombre, genero, duracion, inventario)
+        mensaje = resultado
+        return render_template('mensaje.html', mensaje=mensaje)
+    return render_template('crear_pelicula.html')
 
-        nombre = request.form["nombre"]
-        print(nombre)
-        genero = request.form["genero" ]
-        print(genero)
-        duracion = request.form["duracion"]
-        print(duracion)
-        inventario = request.form["inventario"]
-        print(inventario)
-                
-       
-            
-        
-        retorno = mp.crear_pelicula(nombre, genero, duracion, inventario)
-        
-        if retorno == -1:
-            return render_template("mensaje.html", mensaje="Ha habido un error al crear ese usuario")
-        else:
-            return render_template("mensaje.html", mensaje="Pelicula creado con éxito")
-    
-    
-    
 @pelicula_blueprint.route('/leerPeliculas')
-def mostrar_pelicula():
-    peliculas = mp.leer_peliculas()
-    return render_template("mostrar_peliculas.html", peliculas=peliculas)
+def listar_peliculas():
+    peliculas = PeliculaService.obtener_todas()
+    return render_template('mostrar_peliculas.html', peliculas=peliculas)
 
 @pelicula_blueprint.route('/actualizar', methods=['GET', 'POST'])
 def actualizar_pelicula():
-    if request.method == "GET":
+    if request.method == 'GET':
         return render_template('actualizar_pelicula.html')
-    else:
-        id = request.form["peliculaId"]
-        print(id)
-        nombre = request.form["nombre"]
-        print(nombre)
-        genero = request.form["genero" ]
-        print(genero)
-        duracion = request.form["duracion"]
-        print(duracion)
-        inventario = request.form["inventario"]
-        print(inventario)
-        
-      
-              
-        retorno = mp.actualizar_pelicula(id, nombre, genero, duracion, inventario)
-        
-        if retorno == -1:
-            return render_template("mensaje.html", mensaje="Ha habido un error al querer actualizar")
+    else:  # POST
+        pelicula_id = request.form.get('peliculaId')
+        # Prepara los datos excluyendo 'peliculaId' para evitar el error
+        data = {key: request.form[key] for key in request.form if key != 'peliculaId' and request.form[key]}
+
+        # Llama al método de actualización pasando el ID de la película y los datos desempaquetados
+        resultado = PeliculaService.actualizar(pelicula_id, **data)
+
+        if resultado == 'Película actualizada con éxito.':
+            mensaje = resultado
         else:
-            return render_template("mensaje.html", mensaje="Película actualizado con éxito")
+            mensaje = 'Error al actualizar la película.'
+        return render_template('mensaje.html', mensaje=mensaje)
