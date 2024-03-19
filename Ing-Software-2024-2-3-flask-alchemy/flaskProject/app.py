@@ -15,7 +15,7 @@ app.register_blueprint(pelicula_blueprint)
 
 @app.route('/')
 def menu():  # put application's code here
-    return render_template('menu.html')
+    return render_template('inicio.html')
 
 if __name__ == '__main__':
     app.run()
