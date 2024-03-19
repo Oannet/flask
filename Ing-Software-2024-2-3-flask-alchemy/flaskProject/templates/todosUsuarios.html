@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Lista de Usuarios</title>
+</head>
+<body>
+    <h1>Lista de Usuarios</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellido Paterno</th>
+                <th>Apellido Materno</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>SuperUser</th>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- Aquí se asume que hay un bucle para recorrer los usuarios -->
+            {% for usuario in usuarios %}
+            <tr>
+                <td>{{ usuario.idUsuario }}</td>
+                <td>{{ usuario.nombre }}</td>
+                <td>{{ usuario.apPat }}</td>
+                <td>{{ usuario.apMat }}</td>
+                <td>{{ usuario.email }}</td>
+                <td>{{ usuario.password }}</td>
+                <td>{{ usuario.superUser }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <a href="/"><button type="button">Regresar al inicio</button></a>
+</body>
+</html>

@@ -1,5 +1,4 @@
 from alchemyClasses.peliculas import peliculas
-from alchemyClasses.rentar import rentar
 from alchemyClasses import db
 
 def crear_pelicula(nombre, genero=None, duracion=None, inventario=1):

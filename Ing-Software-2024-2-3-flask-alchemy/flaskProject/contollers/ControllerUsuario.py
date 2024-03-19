@@ -6,19 +6,19 @@ usuario_blueprint = Blueprint('usuario', __name__, url_prefix='/usuario')
 @usuario_blueprint.route('/buscarUsuario', methods=['GET', 'POST'])
 def mostrar_usuario_por_id():
     if request.method == "GET":
-        return render_template('leer_usuarios.html')
+        return render_template('listaUsuarios.html')
     else:
         id = request.form["userId"]
         usuario = mu.leer_usuario_por_id(id)
         if usuario is not None:
-            return render_template("mostrar_usuario.html", usuario=usuario)
+            return render_template("detalleUsuario.html", usuario=usuario)
         else:
             return render_template("mensaje.html", mensaje="No existe usuario con dicho Id")
 
 @usuario_blueprint.route('/borrar', methods=['GET', 'POST'])
 def eliminar_usuario_por_id():
     if request.method == "GET":
-        return render_template('borrar_usuarios.html')
+        return render_template('eliminarUsuario.html')
     else:
         id = request.form["userId"]
         retorno = mu.eliminar_usuario(id)
@@ -27,7 +27,7 @@ def eliminar_usuario_por_id():
 @usuario_blueprint.route('/registro', methods=['GET', 'POST'])
 def agregar_usuario():
     if request.method == "GET":
-        return render_template('crear_usuario.html')
+        return render_template('nuevoUsuario.html')
     else:
         nombre = request.form["nombre"]
         apellidoP = request.form["apPat"]
@@ -36,17 +36,17 @@ def agregar_usuario():
         password = request.form["password"]
         superuser = request.form.get("superUser", 0)
         retorno = mu.crear_usuario(nombre, apellidoP, password, apellidoM, correo, superuser)
-        return render_template("mensaje.html", mensaje="Usuario creado con éxito" if retorno == "Usuario creado exitosamente." else "Ha habido un error al crear ese usuario")
+        return render_template("mensaje.html", mensaje="Usuario creado con éxito" if retorno == "Usuario creado exitosamente." else "error usuario no creado")
 
 @usuario_blueprint.route('/leerUsuarios')
 def mostrar_usuarios():
     usuarios = mu.leer_usuarios()
-    return render_template("mostrar_usuarios.html", usuarios=usuarios)
+    return render_template("todosUsuarios.html", usuarios=usuarios)
 
 @usuario_blueprint.route('/actualizar', methods=['GET', 'POST'])
 def actualizar_usuario():
     if request.method == "GET":
-        return render_template('actualizar_usuario.html')
+        return render_template('editarUsuario.html')
     else:
         id = request.form["userId"]
         nombre = request.form.get("nombre")

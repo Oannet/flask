@@ -8,6 +8,7 @@ def crear_usuario(nombre, apPat, password, apMat=None, email=None, superUser=0):
         db.session.commit()
         return "Usuario creado exitosamente."
     except Exception as e:
+        db.session.rollback()  # Asegura la integridad de la base de datos en caso de un fallo
         return f"Error al crear usuario: {e}"
 
 def leer_usuarios():
@@ -26,7 +27,7 @@ def actualizar_usuario(id, nombre=None, apPat=None, apMat=None, password=None, e
         if apMat:
             usuario.apMat = apMat
         if password:
-            usuario.password = password
+            usuario.password = password  # Considera cifrar la contraseña aquí si no lo has hecho aún
         if email:
             usuario.email = email
         if superUser is not None:
@@ -35,6 +36,7 @@ def actualizar_usuario(id, nombre=None, apPat=None, apMat=None, password=None, e
             db.session.commit()
             return "Usuario actualizado exitosamente."
         except Exception as e:
+            db.session.rollback()  # Asegura la integridad de la base de datos en caso de un fallo
             return f"Error al actualizar usuario: {e}"
     else:
         return "Usuario no encontrado."
@@ -49,4 +51,17 @@ def eliminar_usuario(id_usuario):
         else:
             return "Usuario no encontrado."
     except Exception as e:
+        db.session.rollback()  # Asegura la integridad de la base de datos en caso de un fallo
         return f"Error al eliminar usuario: {e}"
+
+def eliminar_todos_usuarios():
+    try:
+        num_rows_deleted = db.session.query(usuarios).delete()
+        db.session.commit()
+        if num_rows_deleted > 0:
+            return "Todos los usuarios han sido eliminados exitosamente."
+        else:
+            return "No hay usuarios para eliminar."
+    except Exception as e:
+        db.session.rollback()  # Asegura la integridad de la base de datos en caso de un fallo
+        return f"Error al eliminar todos los usuarios: {e}"
